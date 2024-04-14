@@ -116,7 +116,7 @@
 <body>
     <div id="ust-gorsel-container">
         <!-- Görseli üst sınır ile altındaki input text alanları arasında hizalamak için bir konteynır -->
-        <img id="ust-gorsel" src="/Users/dogukan/Downloads/egesanegelitaslakfoto.jpeg" alt="Üst Görsel">
+        <img id="ust-gorsel" src="egesanegelitaslakfoto.jpeg" alt="Üst Görsel">
     </div>
 
     <div id="main-container">
