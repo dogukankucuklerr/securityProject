@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egesan / Egeli Güvenlik</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #CFD8DC; /* Açık gri renk */
+        }
+        #ust-gorsel-container {
+            position: relative;
+            width: 100%;
+            height: 150px; /* Görselin yüksekliği */
+            overflow: hidden;
+            margin-top: 5px; /* Üst sınır ile arasında 30px boşluk */
+        }
+        #ust-gorsel {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        #main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -15px; /* Üstteki görsel için boşluk bırakma */
+            z-index: 2;
+            position: relative;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        
+        }
+        .input-group input[type="text"] {
+            margin-bottom: 10px;
+            margin-right: 10px;
+            width: 350px;
+            height: 30px;
+            border-radius: 7px; /* Köşeleri yuvarla */
+            padding-left: 5px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: 15px;
+            margin-top: -16px;
+        }
+        .button-container button {
+            margin: 10px;
+            width: 120px;
+            height: 38px;
+            margin-bottom: -15px;
+            border-radius: 7px; /* Köşeleri yuvarla */
+        }
+        #tablo-container {
+            max-height: 60vh;
+            overflow-y: auto;
+            width: calc(100vw - 100px);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 2px solid black; /* Tablo çizgilerinin rengini siyah yap */
+        }
+        th, td {
+            border: 1px solid black; /* Hücre çizgilerinin rengini siyah yap */
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr.selected {
+            background-color: lightblue;
+        }
+        .datetime-container {
+             display: flex;
+             flex-direction: column;
+             align-items: flex-end;
+             margin-top: 20px; /* Butonlar ile arasında boşluk bırak */
+             margin-left: 10px;
+             margin-right: 10px;
+            }
+
+         .datetime-container input[type="date"],
+         .datetime-container input[type="time"] {
+             margin-bottom: 10px;
+             width: 200px;
+             height: 30px;
+             border-radius: 7px; /* Köşeleri yuvarla */
+            padding-left: 5px;
+        }
+        .input-group .button-container {
+             order: 3; /* Butonları sağ tarafa almak için sıralama düzeni */
+        }
+
+        .input-group .datetime-container {
+             order: 2; /* Tarih ve saat seçicileri ortaya almak için sıralama düzeni */
+        }
+       
+
+    </style>
+</head>
+<body>
+    <div id="ust-gorsel-container">
+        <!-- Görseli üst sınır ile altındaki input text alanları arasında hizalamak için bir konteynır -->
+        <img id="ust-gorsel" src="/Users/dogukan/Downloads/egesanegelitaslakfoto.jpeg" alt="Üst Görsel">
+    </div>
+
+    <div id="main-container">
+        <h2>Güvenlik Giriş - Çıkış Kayıtları</h2>
+        <div class="input-group">
+            <div>
+                <input type="text" id="ad" placeholder="Adınız"><br>
+                <input type="text" id="soyad" placeholder="Soyadınız"><br>
+                <input type="text" id="yas" placeholder="Yaşınız"><br>
+            </div>
+            <div>
+                <input type="text" id="email" placeholder="Email"><br>
+                <input type="text" id="telefon" placeholder="Telefon"><br>
+                <input type="text" id="adres" placeholder="Adres"><br>
+            </div>
+            <div class="button-container">
+                <button onclick="buton1Click()">Kaydet</button><br>
+                <button onclick="buton2Click()">Güncelle</button><br>
+                <button onclick="buton3Click()">Sil</button>
+            </div>
+            <div class="datetime-container">
+                <input type="date" id="tarih" name="tarih"><br>
+                <input type="time" id="saat" name="saat"><br>
+            </div>
+        </div>
+
+        <div id="tablo-container">
+            <table id="kayitlar">
+                <thead>
+                    <tr>
+                        <th>Ad</th>
+                        <th>Soyad</th>
+                        <th>Yaş</th>
+                        <th>Email</th>
+                        <th>Telefon</th>
+                        <th>Adres</th>
+                        <th>Tarih (Yıl - Ay - Gün)</th>
+                        <th>Saat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Buraya JavaScript ile eklenen veriler gelecek -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+    <script>
+       
+        var seciliSatir = null;
+        
+        
+
+        function buton1Click() {
+           
+            
+           
+            var ad = document.getElementById('ad').value;
+            var soyad = document.getElementById('soyad').value;
+            var yas = document.getElementById('yas').value;
+            var email = document.getElementById('email').value;
+            var telefon = document.getElementById('telefon').value;
+            var adres = document.getElementById('adres').value;
+            var tarih = document.getElementById('tarih').value; // Datepicker'dan tarih değerini al
+            var saat = document.getElementById('saat').value; // Timepicker'dan saat değerini al
+
+           
+
+            var table = document.getElementById('kayitlar').getElementsByTagName('tbody')[0];
+            var row = table.insertRow();
+
+            var adCell = row.insertCell(0);
+            var soyadCell = row.insertCell(1);
+            var yasCell = row.insertCell(2);
+            var emailCell = row.insertCell(3);
+            var telefonCell = row.insertCell(4);
+            var adresCell = row.insertCell(5);
+            var tarihCell = row.insertCell(6); // Yeni hücre ekle: Tarih
+            var saatCell = row.insertCell(7); // Yeni hücre ekle: Saat
+
+            adCell.innerHTML = ad;
+            soyadCell.innerHTML = soyad;
+            yasCell.innerHTML = yas;
+            emailCell.innerHTML = email;
+            telefonCell.innerHTML = telefon;
+            adresCell.innerHTML = adres;
+            tarihCell.innerHTML = tarih; // Biçimlendirilmiş tarihi hücreye ekle
+            saatCell.innerHTML = saat; // Saat değerini hücreye ekle
+
+             // Değerler güncellendikten sonra input alanlarını temizle
+                document.getElementById('ad').value = "";
+                document.getElementById('soyad').value = "";
+                document.getElementById('yas').value = "";
+                document.getElementById('email').value = "";
+                document.getElementById('telefon').value = "";
+                document.getElementById('adres').value = "";
+                document.getElementById('saat').value = ""; // Timepicker'ı temizle
+
+            row.onclick = function() {
+                if (seciliSatir) {
+                    seciliSatir.classList.remove('selected');
+                }
+                seciliSatir = this;
+                this.classList.add('selected');
+
+                // Satır seçildiğinde, input alanlarına değerleri doldur
+               
+
+                document.getElementById('ad').value = adCell.innerHTML;
+                document.getElementById('soyad').value = soyadCell.innerHTML;
+                document.getElementById('yas').value = yasCell.innerHTML;
+                document.getElementById('email').value = emailCell.innerHTML;
+                document.getElementById('telefon').value = telefonCell.innerHTML;
+                document.getElementById('adres').value = adresCell.innerHTML;
+                document.getElementById('tarih').value = tarihCell.innerHTML;
+                document.getElementById('saat').value = saatCell.innerHTML;
+
+                
+
+
+            }
+        }
+
+        function buton2Click() {
+            if (seciliSatir) {
+                
+               
+                
+                var ad = document.getElementById('ad').value;
+                var soyad = document.getElementById('soyad').value;
+                var yas = document.getElementById('yas').value;
+                var email = document.getElementById('email').value;
+                var telefon = document.getElementById('telefon').value;
+                var adres = document.getElementById('adres').value;
+                var tarih = document.getElementById('tarih').value;
+                var saat = document.getElementById('saat').value;
+
+                
+
+                seciliSatir.cells[0].innerHTML = ad;
+                seciliSatir.cells[1].innerHTML = soyad;
+                seciliSatir.cells[2].innerHTML = yas;
+                seciliSatir.cells[3].innerHTML = email;
+                seciliSatir.cells[4].innerHTML = telefon;
+                seciliSatir.cells[5].innerHTML = adres;
+                seciliSatir.cells[6].innerHTML = tarih;
+                seciliSatir.cells[7].innerHTML = saat;
+
+                // Değerler güncellendikten sonra input alanlarını temizle
+                document.getElementById('ad').value = "";
+                document.getElementById('soyad').value = "";
+                document.getElementById('yas').value = "";
+                document.getElementById('email').value = "";
+                document.getElementById('telefon').value = "";
+                document.getElementById('adres').value = "";
+                document.getElementById('tarih').value = "";
+                document.getElementById('saat').value = "";
+            }
+        }
+
+        function buton3Click() {
+            if (seciliSatir) {
+                seciliSatir.remove();
+                seciliSatir = null;
+
+               
+
+                // Satır silindiğinde, input alanlarını temizle
+                document.getElementById('ad').value = "";
+                document.getElementById('soyad').value = "";
+                document.getElementById('yas').value = "";
+                document.getElementById('email').value = "";
+                document.getElementById('telefon').value = "";
+                document.getElementById('adres').value = "";
+                document.getElementById('tarih').value = "";
+                document.getElementById('saat').value = "";
+
+               
+            }
+        }
+        document.addEventListener('click', function(event) {
+    // Tıklanan element bir tablo satırı mı?
+    var isTableRow = event.target.tagName.toLowerCase() === 'td' && event.target.parentNode.tagName.toLowerCase() === 'tr';
+
+    // Tıklanan element bir input alanı mı?
+    var isInputField = event.target.tagName.toLowerCase() === 'input';
+
+    // Eğer tıklanan element bir input alanı ise, işlem yapmadan fonksiyondan çık
+    if (isInputField) {
+        return;
+    }
+
+    // Eğer tıklanan element bir tablo satırı değilse ve bir satır seçili ise seçiliği kaldır
+    if (!isTableRow && seciliSatir) {
+        seciliSatir.classList.remove('selected');
+        seciliSatir = null;
+
+        // Input alanlarını temizle
+        document.getElementById('ad').value = "";
+        document.getElementById('soyad').value = "";
+        document.getElementById('yas').value = "";
+        document.getElementById('email').value = "";
+        document.getElementById('telefon').value = "";
+        document.getElementById('adres').value = "";
+        document.getElementById('saat').value = "";
+        document.getElementById('tarih').value = "";
+    }
+});
+
+/*
+
+6 adet input textfield eklendi 1 adet datepicker 1 adet time picker eklendi.
+
+Tarayıcının kendi datepickeri kullanıldığı için yıl-ay-gün formatında önizlendi.
+
+İnputları girdikten sonra önizleyebilmek ve değişiklik yapabilmek için tablo viewi eklendi.
+
+Verileri girip kaydete bastıktan sonra verileri tableviewe ekler ve tarih haricinde diğer verilerin 
+input textfieldlerden silinmesi sağlanır. Bu sayede gün içinde kayıt yapılırken son ayarlanan tarihten
+tekrar ayarlamaya gerek olmaksızın devam edilebilmesi sağlanır.
+
+Tableviewde üzerine tıklayarak seçilen satırın verilerin hepsinin input textfieldlere otomatik 
+doldurulması sağlanır. Böylece sadece bir inputu güncellerken diğerlerini tekrar yazmaya gerek
+kalmaması sağlanır.
+
+Güncelleme yapıldıktan sonra tüm input textfieldlerin içi temizlenir. Yeni kayıt için boş alan 
+sağlamak amaçlanmıştır.
+
+Yine aynı şekilde satır seçilip sil butonuna basılınca tableviewden tüm veriler silinir ve
+input textfieldlerin hepsi temizlenir. Yeni kayıt için yer açılır.
+
+Tableviewde bir satırı seçtikten sonra bir işlem yapılmayacaksa herhangi boş bir alana tıklandığında 
+tüm input textfieldler temizlenerek yeni kayıt için alan açılır.
+
+
+
+DEĞİŞECEKLER:
+LOGO PNG OLARAK İSTENECEK
+HANGİ İNPUTLAR GEREKLİYSE ONLAR DEĞİŞTİRİLECEK
+TASARIM GÖZDEN GEÇİRİLEBİLİR
+
+
+
+
+
+
+*/
+
+    </script>
+</body>
+
+</html>
